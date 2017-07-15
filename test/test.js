@@ -1,3 +1,5 @@
+"use strict";
+
 const xmljs = require('../lib/exports');
 
 function success(text)
@@ -145,7 +147,7 @@ const jsonExtended = JSON.stringify({
 
 function test(name, value)
 {
-    sep = name.length % 2 === 1 ? '=============================================' : '==============================================';
+    const sep = name.length % 2 === 1 ? '=============================================' : '==============================================';
     name = '  ' + name + '  ';
     while(name.length < sep.length)
         name = '=' + name + '=';
@@ -156,7 +158,8 @@ function test(name, value)
     value = xmljs.XML.parse(value);
 
     const sect = sectors();
-    const { sector, sectorE } = sect;
+    const sector = sect.sector;
+    const sectorE = sect.sectorE;
 
     sector('Seek for "DAV:multistatus"', () => {
         const mulstistatus = value.find('DAV:multistatus')
