@@ -69,7 +69,7 @@ export class XMLElementBuilder implements XMLElement
     add<T>(element : any) : T | T[]
     {
         if(element.constructor === Array)
-            return (element as any[]).map(this.add);
+            return (element as any[]).map(this.add.bind(this) as (element : any) => T);
         
         if(!element.type)
             element = {
