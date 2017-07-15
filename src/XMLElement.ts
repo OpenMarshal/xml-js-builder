@@ -1,0 +1,9 @@
+
+export interface XMLElement
+{
+    declaration ?: any
+    attributes ?: any
+    elements ?: XMLElement[]
+    name : string
+    type : string
+}
