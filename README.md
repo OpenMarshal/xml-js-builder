@@ -1,4 +1,4 @@
-# xml-js-builder [![npm Version](https://img.shields.io/npm/v/xml-js-builder.svg)](https://www.npmjs.com/package/xml-js-builder)
+# xml-js-builder [![npm Version](https://img.shields.io/npm/v/xml-js-builder.svg)](https://www.npmjs.com/package/xml-js-builder) [![Build Status](https://travis-ci.org/OpenMarshal/xml-js-builder.svg?branch=master)](https://travis-ci.org/OpenMarshal/xml-js-builder)
 
 This is a `npm` library which ease the use of XML with namespaces.
 
