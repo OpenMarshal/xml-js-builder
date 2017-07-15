@@ -4,6 +4,8 @@ This is a `npm` library which ease the use of XML with namespaces.
 
 This way, parsing `<tag xmlns="ns"/>` will be reachable by `.find('ns:tag')` instead of having to check the attributes to know if it is in the right namespace.
 
+The `xmljs.XML.parse(...)` can parse XML, JSON (compact and extended) from `xml-js`.
+
 ## Install
 
 ```bash
