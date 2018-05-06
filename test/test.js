@@ -226,6 +226,7 @@ test('JSON Extended', jsonExtended);
     xml.ele('d:node2').add('Ok2')
     xml.ele('d:tag')
     xml.ele('x:test')
+    xml.ele('http://local-example/schemas/test')
     xml.add({
         type: 'element',
         name: 'LCGDM:mode'

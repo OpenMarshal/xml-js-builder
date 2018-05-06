@@ -12,7 +12,7 @@ export declare class XMLElementBuilder implements XMLElement {
     toJSON(includeDeclaration?: boolean): string;
     ele(name: string, attributes?: any, insertAtStart?: boolean): XMLElementBuilder;
     findNamespace(namespace: string): string;
-    protected static exportFindNamespace(element: XMLElementBuilder): (() => any) | ((ns: string) => string);
+    protected static exportFindNamespace(element: XMLElementBuilder): (ns: string) => string;
     add<T>(element: any[]): T[];
     add<T>(element: any): T;
 }

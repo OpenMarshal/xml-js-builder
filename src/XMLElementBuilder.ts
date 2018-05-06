@@ -1,10 +1,24 @@
 import { XMLElement } from './XMLElement'
 import { XML } from './XML'
 
+function setFreeNamespaceName(leftName : string, rightName : string, attributes : { [name : string] : string })
+{
+    let kname = 'a';
+    const value = leftName + ':';
+    while (attributes['xmlns:' + kname] !== undefined || value.indexOf(kname + ':') === 0) {
+        const newChar = kname.charCodeAt(0) + 1;
+        if (newChar > 'z'.charCodeAt(0))
+            kname = 'x' + String.fromCharCode(newChar);
+        else
+            kname = kname.substr(0, kname.length - 1) + String.fromCharCode(newChar);
+    }
+    attributes['xmlns:' + kname] = value;
+    return kname + ':' + rightName;
+}
+
 function explodeName(name : string, attributes : { [name : string] : string }, findNamespaceInParents : (ns : string) => string) : string
 {
-    const li1 = name.lastIndexOf(':');
-    const li2 = name.indexOf(':');
+    const li1 = Math.max(name.lastIndexOf(':'), name.lastIndexOf('/'));
     
     if(li1 === -1)
         return name;
@@ -21,39 +35,7 @@ function explodeName(name : string, attributes : { [name : string] : string }, f
     if(findNamespaceInParents(leftName))
         return name;
 
-    let kname = 'a';
-    const value = leftName + ':';
-    while (attributes['xmlns:' + kname] !== undefined || value.indexOf(kname + ':') === 0) {
-        const newChar = kname.charCodeAt(0) + 1;
-        if (newChar > 'z'.charCodeAt(0))
-            kname = 'x' + String.fromCharCode(newChar);
-        else
-            kname = kname.substr(0, kname.length - 1) + String.fromCharCode(newChar);
-    }
-    attributes['xmlns:' + kname] = value;
-    name = kname + ':' + rightName;
-    
-    return name;
-
-    /*
-    const lindex = Math.max(li1 === li2 && name.indexOf('DAV:') !== 0 ? -1 : li1, name.lastIndexOf('/')) + 1;
-    if(lindex !== 0)
-    {
-        let kname = 'a';
-        const value = name.substring(0, lindex);
-        while(attributes['xmlns:' + kname] !== undefined || value.indexOf(kname + ':') === 0)
-        {
-            const newChar = kname.charCodeAt(0) + 1;
-            if(newChar > 'z'.charCodeAt(0))
-                kname = 'x' + String.fromCharCode(newChar);
-            else
-                kname = kname.substr(0, kname.length - 1) + String.fromCharCode(newChar);
-        }
-        attributes['xmlns:' + kname] = value;
-        name = kname + ':' + name.substring(lindex);
-    }
-
-    return name;*/
+    return setFreeNamespaceName(leftName, rightName, attributes);
 }
 
 export class XMLElementBuilder implements XMLElement
@@ -72,9 +54,16 @@ export class XMLElementBuilder implements XMLElement
             attributes = {};
         
         this.parent = parent;
-        this.name = explodeName(name, attributes, XMLElementBuilder.exportFindNamespace(parent));
-        this.type = 'element';
         this.attributes = attributes;
+        const slashLastIndex = name.lastIndexOf('/');
+        if(slashLastIndex > -1)
+        {
+            const leftName = name.substring(0, slashLastIndex);
+            const rightName = name.substring(slashLastIndex + 1);
+            name = setFreeNamespaceName(leftName, rightName, this.attributes);
+        }
+        this.name = name;
+        this.type = 'element';
         this.elements = [];
     }
 
@@ -111,11 +100,6 @@ export class XMLElementBuilder implements XMLElement
 
     protected static exportFindNamespace(element : XMLElementBuilder)
     {
-        if(!element || !element.findNamespace)
-            return () => {
-                return undefined;
-            };
-
         return (ns : string) => {
             return element.findNamespace(ns);
         };
