@@ -155,14 +155,14 @@ function test(name, value)
     console.log(name);
     console.log(sep);
     
-    value = xmljs.XML.parse(value);
+    const parsed = xmljs.XML.parse(value);
 
     const sect = sectors();
     const sector = sect.sector;
     const sectorE = sect.sectorE;
 
     sector('Seek for "DAV:multistatus"', () => {
-        const mulstistatus = value.find('DAV:multistatus')
+        const mulstistatus = parsed.find('DAV:multistatus')
         sector('Seek for "DAV:deep"', () => {
             const deep = mulstistatus.find('DAV:deep')
             sector('Seek for "ttt:test"', () => {
@@ -190,6 +190,16 @@ function test(name, value)
         })
     })
 
+    if(value.constructor === String)
+    {
+        sector('Check namespaces', () => {
+            sector('Check for namespace with LCGDM:mode', () => {
+                if(value.indexOf('LCGDM:mode') !== -1)
+                    throw new Error('Namespace not pushed in the attributes');
+            })
+        })
+    }
+
     if(sect.nbErrors === 0)
         console.log(' Passed!');
     else
@@ -216,6 +226,10 @@ test('JSON Extended', jsonExtended);
     xml.ele('d:node2').add('Ok2')
     xml.ele('d:tag')
     xml.ele('x:test')
+    xml.add({
+        type: 'element',
+        name: 'LCGDM:mode'
+    })
     xml.ele('nons').add('yes')
     xml.ele('d:node2').add('Ok3')
     
