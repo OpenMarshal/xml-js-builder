@@ -6,10 +6,13 @@ export declare class XMLElementBuilder implements XMLElement {
         [name: string]: string;
     };
     elements: XMLElementBuilder[];
-    constructor(name: string, attributes?: any);
+    parent: XMLElementBuilder;
+    constructor(name: string, attributes?: any, parent?: XMLElementBuilder);
     toXML(includeDeclaration?: boolean): string;
     toJSON(includeDeclaration?: boolean): string;
     ele(name: string, attributes?: any, insertAtStart?: boolean): XMLElementBuilder;
+    findNamespace(namespace: string): string;
+    protected static exportFindNamespace(element: XMLElementBuilder): (() => any) | ((ns: string) => string);
     add<T>(element: any[]): T[];
     add<T>(element: any): T;
 }
