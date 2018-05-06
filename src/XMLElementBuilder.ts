@@ -9,10 +9,10 @@ function explodeName(name : string, attributes : { [name : string] : string }, f
     if(li1 === -1)
         return name;
 
-    var leftName = name.substring(0, li1);
-    var rightName = name.substring(li1 + 1);
+    const leftName = name.substring(0, li1);
+    const rightName = name.substring(li1 + 1);
 
-    var namespace = attributes['xmlns:' + leftName];
+    const namespace = attributes['xmlns:' + leftName];
     if(namespace)
     {
         return name;
@@ -21,10 +21,10 @@ function explodeName(name : string, attributes : { [name : string] : string }, f
     if(findNamespaceInParents(leftName))
         return name;
 
-    var kname = 'a';
-    var value = leftName + ':';
+    let kname = 'a';
+    const value = leftName + ':';
     while (attributes['xmlns:' + kname] !== undefined || value.indexOf(kname + ':') === 0) {
-        var newChar = kname.charCodeAt(0) + 1;
+        const newChar = kname.charCodeAt(0) + 1;
         if (newChar > 'z'.charCodeAt(0))
             kname = 'x' + String.fromCharCode(newChar);
         else
@@ -99,8 +99,9 @@ export class XMLElementBuilder implements XMLElement
     
     findNamespace(namespace : string) : string
     {
-        if(this.attributes['xmlns:' + namespace])
-            return this.attributes['xmlns:' + namespace];
+        const valueFound = this.attributes['xmlns:' + namespace];
+        if(valueFound)
+            return valueFound;
 
         if(!this.parent)
             return undefined;

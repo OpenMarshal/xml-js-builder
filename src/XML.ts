@@ -14,6 +14,15 @@ export abstract class XML
         {
             try
             {
+                const data = JSON.parse(xml.toString());
+                if(data.elements && data.elements[0].type && data.elements[0].name)
+                    return XML.parseJSON(xml, false);
+            }
+            catch(_)
+            { }
+
+            try
+            {
                 return XML.parseJSON(xml, true);
             }
             catch(_)
